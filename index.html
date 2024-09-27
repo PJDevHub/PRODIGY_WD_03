@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Stopwatch</title>
+<style>
+body {
+  background-color: #000;
+  color: #fff;
+  font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stopwatch {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background-color: #000;
+  border: 5px solid #f00;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 36px;
+}
+
+.controls {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+button {
+  background-color: #333;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="stopwatch" id="stopwatch">00:00:00</div>
+  <div class="controls">
+    <button onclick="startStopwatch()">Start</button>
+    <button onclick="pauseStopwatch()">Pause</button>
+    <button onclick="resetStopwatch()">Reset</button>
+  </div>
+</div>
+
+<script>
+let startTime = 0;
+let elapsedTime = 0;
+let timerInterval;
+
+function startStopwatch() {
+  if (timerInterval) {
+    return;
+  }
+
+  startTime = Date.now() - elapsedTime;
+  timerInterval = setInterval(updateStopwatch, 10);
+}
+
+function pauseStopwatch() {
+  clearInterval(timerInterval);
+  elapsedTime = Date.now() - startTime;
+  timerInterval = null;
+}
+
+function resetStopwatch() {
+  clearInterval(timerInterval);
+  startTime = 0;
+  elapsedTime = 0;
+  document.getElementById("stopwatch").textContent = "00:00:00";
+  timerInterval = null;
+}
+
+function updateStopwatch() {
+  let currentTime = Date.now();
+  let timeElapsed = currentTime - startTime;
+  let minutes = Math.floor(timeElapsed / (1000 * 60));
+  let seconds = Math.floor((timeElapsed % (1000 * 60)) / 1000);
+  let milliseconds = Math.floor((timeElapsed % 1000) / 10);
+
+  let formattedTime = `${pad(minutes)}:${pad(seconds)}:${pad(milliseconds)}`;
+  document.getElementById("stopwatch").textContent = formattedTime;
+}
+
+function pad(num) {
+  return ("0" + num).slice(-2);
+}
+</script>
+</body>
+</html>
